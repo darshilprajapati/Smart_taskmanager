@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Task Manager</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="background-blur"></div>
+
+    <div class="container">
+
+        <div class="header">
+
+            <div>
+                <h1>Smart Task Manager</h1>
+                <p>
+                    Organize your workflow with analytics
+                    and real-time task updates.
+                </p>
+            </div>
+
+            <a href="/logout" class="logout-btn">
+                Logout
+            </a>
+
+        </div>
+
+        <div class="dashboard-grid">
+
+            <div class="form-section glass-card">
+
+                <h2>Create New Task</h2>
+
+                <form id="taskForm">
+
+                    <input type="text"
+                           id="title"
+                           placeholder="Task Title"
+                           required>
+
+                    <textarea id="description"
+                              placeholder="Task Description"></textarea>
+
+                    <div class="select-group">
+
+                        <select id="priority">
+
+                            <option>High</option>
+                            <option>Medium</option>
+                            <option>Low</option>
+
+                        </select>
+
+                        <select id="status">
+
+                            <option>Pending</option>
+                            <option>Completed</option>
+
+                        </select>
+
+                    </div>
+
+                    <button type="submit">
+                        Add Task
+                    </button>
+
+                </form>
+
+            </div>
+
+            <div class="analytics-section glass-card">
+
+                <h2>Analytics</h2>
+
+                <div class="analytics-grid">
+
+                    <div class="analytics-card">
+                        <h3>Total</h3>
+                        <span>
+                            {{ analytics.total_tasks }}
+                        </span>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3>Completed</h3>
+                        <span>
+                            {{ analytics.completed_tasks }}
+                        </span>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3>Pending</h3>
+                        <span>
+                            {{ analytics.pending_tasks }}
+                        </span>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3>Success</h3>
+                        <span>
+                            {{ analytics.completion_percentage }}%
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="tasks-section">
+
+            <div class="section-title">
+
+                <h2>Your Tasks</h2>
+
+            </div>
+
+            <div class="tasks-grid">
+
+                {% for task in tasks %}
+
+                <div class="task-card glass-card">
+
+                    <input
+                        type="text"
+                        id="title-{{ task.id }}"
+                        value="{{ task.title }}"
+                    >
+
+                    <textarea
+                        id="description-{{ task.id }}"
+                    >{{ task.description }}</textarea>
+
+                    <div class="select-group">
+
+                        <select id="priority-{{ task.id }}">
+
+                            <option
+                                value="High"
+                                {% if task.priority == "High" %}
+                                selected
+                                {% endif %}
+                            >
+                                High
+                            </option>
+
+                            <option
+                                value="Medium"
+                                {% if task.priority == "Medium" %}
+                                selected
+                                {% endif %}
+                            >
+                                Medium
+                            </option>
+
+                            <option
+                                value="Low"
+                                {% if task.priority == "Low" %}
+                                selected
+                                {% endif %}
+                            >
+                                Low
+                            </option>
+
+                        </select>
+
+                        <select id="status-{{ task.id }}">
+
+                            <option
+                                value="Pending"
+                                {% if task.status == "Pending" %}
+                                selected
+                                {% endif %}
+                            >
+                                Pending
+                            </option>
+
+                            <option
+                                value="Completed"
+                                {% if task.status == "Completed" %}
+                                selected
+                                {% endif %}
+                            >
+                                Completed
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="task-actions">
+
+                        <button
+                            onclick="updateTask({{ task.id }})">
+                            Update
+                        </button>
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteTask({{ task.id }})">
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+
+</body>
+
+</html>
