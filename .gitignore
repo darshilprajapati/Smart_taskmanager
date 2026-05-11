@@ -1,17 +1,21 @@
-services:
-  - type: web
-    name: smart-task-manager
-    runtime: python
+# Virtual Environment
+venv/
 
-    buildCommand: |
-      pip install -r requirements.txt
+# Environment Variables
+.env
 
-    startCommand: |
-      gunicorn -k eventlet -w 1 run:app
+# Python Cache
+__pycache__/
+*.pyc
 
-    envVars:
-      - key: DATABASE_URL
-        sync: false
+# Flask Cache
+instance/
 
-      - key: SECRET_KEY
-        sync: false
+# VS Code
+.vscode/
+
+# Mac/Linux
+.DS_Store
+
+# Logs
+*.log
